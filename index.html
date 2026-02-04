@@ -3,538 +3,760 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jessie Lyu | Economics & Mathematics</title>
+  <title class="en">Jessie Lyu | Economics & Mathematics</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <script>
+    // Tailwind config (kept)
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            primary: "#165DFF",
-            secondary: "#FF7D00",
-            dark: "#1E293B",
-            light: "#F8FAFC",
+            primary: '#165DFF',
+            secondary: '#FF7D00',
+            dark: '#1E293B',
+            light: '#F8FAFC'
           },
           fontFamily: {
-            inter: ["Inter", "sans-serif"],
+            inter: ['Inter', 'sans-serif'],
           },
-        },
-      },
+        }
+      }
     };
 
-    document.addEventListener("DOMContentLoaded", () => {
-      // Mobile menu toggle
-      const mobileBtn = document.getElementById("mobile-menu-button");
-      const mobileMenu = document.getElementById("mobile-menu");
+    // Email copy functionality (kept, but works for Jessie emails)
+    document.addEventListener('DOMContentLoaded', function() {
+      const copyButtons = document.querySelectorAll('.copy-email-btn');
+
+      copyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const email = this.getAttribute('data-email');
+          const icon = this.querySelector('i');
+          const originalIcon = icon.className;
+
+          navigator.clipboard.writeText(email).then(() => {
+            icon.className = 'fa-solid fa-check text-green-500';
+            setTimeout(() => { icon.className = originalIcon; }, 2000);
+          }).catch(() => {
+            icon.className = 'fa-solid fa-xmark text-red-500';
+            setTimeout(() => { icon.className = originalIcon; }, 2000);
+          });
+        });
+      });
+
+      // Mobile menu toggle (kept)
+      const mobileBtn = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
       if (mobileBtn && mobileMenu) {
-        mobileBtn.addEventListener("click", () => {
-          mobileMenu.classList.toggle("hidden");
+        mobileBtn.addEventListener('click', () => {
+          mobileMenu.classList.toggle('hidden');
         });
       }
 
-      // Email copy buttons
-      const copyButtons = document.querySelectorAll(".copy-email-btn");
-      copyButtons.forEach((button) => {
-        button.addEventListener("click", async () => {
-          const email = button.getAttribute("data-email") || "";
-          const icon = button.querySelector("i");
-          if (!icon) return;
+      // Language switch (kept; Chinese is placeholder content now)
+      function setLang(lang) {
+        document.querySelectorAll('.en').forEach(el => el.classList.toggle('hidden', lang !== 'en'));
+        document.querySelectorAll('.zh').forEach(el => el.classList.toggle('hidden', lang !== 'zh'));
 
-          const original = icon.className;
-          try {
-            await navigator.clipboard.writeText(email);
-            icon.className = "fa-solid fa-check text-green-500";
-          } catch (e) {
-            console.error("Failed to copy:", e);
-            icon.className = "fa-solid fa-xmark text-red-500";
-          } finally {
-            setTimeout(() => (icon.className = original), 1400);
-          }
-        });
-      });
+        const enBtn = document.getElementById('lang-en');
+        const zhBtn = document.getElementById('lang-zh');
+        const enBtnM = document.getElementById('lang-en-mobile');
+        const zhBtnM = document.getElementById('lang-zh-mobile');
 
-      // Close mobile menu on link click
-      document.querySelectorAll("#mobile-menu a").forEach((a) => {
-        a.addEventListener("click", () => mobileMenu?.classList.add("hidden"));
-      });
+        if (enBtn && zhBtn) {
+          enBtn.classList.toggle('bg-primary', lang === 'en');
+          enBtn.classList.toggle('text-white', lang === 'en');
+          zhBtn.classList.toggle('bg-primary', lang === 'zh');
+          zhBtn.classList.toggle('text-white', lang === 'zh');
+        }
+        if (enBtnM && zhBtnM) {
+          enBtnM.classList.toggle('bg-primary', lang === 'en');
+          enBtnM.classList.toggle('text-white', lang === 'en');
+          zhBtnM.classList.toggle('bg-primary', lang === 'zh');
+          zhBtnM.classList.toggle('text-white', lang === 'zh');
+        }
+      }
+
+      const enBtn = document.getElementById('lang-en');
+      const zhBtn = document.getElementById('lang-zh');
+      const enBtnM = document.getElementById('lang-en-mobile');
+      const zhBtnM = document.getElementById('lang-zh-mobile');
+
+      if (enBtn) enBtn.addEventListener('click', () => setLang('en'));
+      if (zhBtn) zhBtn.addEventListener('click', () => setLang('zh'));
+      if (enBtnM) enBtnM.addEventListener('click', () => setLang('en'));
+      if (zhBtnM) zhBtnM.addEventListener('click', () => setLang('zh'));
+
+      setLang('en'); // default
     });
   </script>
 
   <style type="text/tailwindcss">
     @layer utilities {
+      .content-auto { content-visibility: auto; }
+      .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+      .transition-transform-opacity { transition-property: transform, opacity; }
       .bg-gradient-blue { background: linear-gradient(135deg, #165DFF 0%, #0047AB 100%); }
-      .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes fadeOut {
+        from { opacity: 1; transform: translateY(0); }
+        to   { opacity: 0; transform: translateY(10px); }
+      }
+      .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+      .animate-fade-out { animation: fadeOut 0.3s ease-out forwards; }
     }
   </style>
 </head>
 
 <body class="font-inter text-dark bg-light antialiased">
-  <!-- Header -->
-  <header class="fixed w-full bg-white/90 backdrop-blur-md shadow-sm z-50" id="navbar">
+
+  <!-- Header & Navigation (kept layout) -->
+  <header class="fixed w-full bg-white/90 backdrop-blur-md shadow-sm z-50 transition-all duration-300" id="navbar">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <a href="#home" class="flex items-center space-x-2">
           <span class="text-primary font-bold text-xl">Jessie Lyu</span>
         </a>
 
-        <!-- Desktop Nav -->
+        <!-- Desktop Navigation -->
         <nav class="hidden md:flex space-x-8 items-center">
-          <a href="#about" class="text-dark hover:text-primary transition-colors font-medium">About</a>
-          <a href="#experience" class="text-dark hover:text-primary transition-colors font-medium">Experience</a>
-          <a href="#projects" class="text-dark hover:text-primary transition-colors font-medium">Projects</a>
-          <a href="#leadership" class="text-dark hover:text-primary transition-colors font-medium">Leadership</a>
-          <a href="#skills" class="text-dark hover:text-primary transition-colors font-medium">Skills</a>
-          <a href="#contact" class="text-dark hover:text-primary transition-colors font-medium">Contact</a>
+          <a href="#home" class="text-dark hover:text-primary transition-colors duration-200 font-medium">
+            <span class="en">Home</span><span class="zh hidden">主页</span>
+          </a>
+          <a href="#about" class="text-dark hover:text-primary transition-colors duration-200 font-medium">
+            <span class="en">About</span><span class="zh hidden">关于</span>
+          </a>
+          <a href="#experience" class="text-dark hover:text-primary transition-colors duration-200 font-medium">
+            <span class="en">Experience</span><span class="zh hidden">经历</span>
+          </a>
+          <a href="#projects" class="text-dark hover:text-primary transition-colors duration-200 font-medium">
+            <span class="en">Projects</span><span class="zh hidden">项目</span>
+          </a>
+          <a href="#interests" class="text-dark hover:text-primary transition-colors duration-200 font-medium">
+            <span class="en">Interests</span><span class="zh hidden">兴趣</span>
+          </a>
+          <a href="#contact" class="text-dark hover:text-primary transition-colors duration-200 font-medium">
+            <span class="en">Contact</span><span class="zh hidden">联系</span>
+          </a>
+
+          <!-- Language Switcher (kept) -->
+          <div class="flex items-center space-x-2">
+            <button id="lang-en" class="px-2 py-1 rounded-md bg-primary text-white text-sm font-medium">EN</button>
+            <button id="lang-zh" class="px-2 py-1 rounded-md text-dark text-sm font-medium hover:bg-gray-100 transition-colors duration-200">中文</button>
+          </div>
         </nav>
 
-        <!-- Mobile Toggle -->
+        <!-- Mobile Navigation Toggle -->
         <button id="mobile-menu-button" class="md:hidden text-dark hover:text-primary focus:outline-none" aria-label="Open menu">
           <i class="fa-solid fa-bars text-xl"></i>
         </button>
       </div>
     </div>
 
-    <!-- Mobile Menu -->
+    <!-- Mobile Navigation Menu (kept) -->
     <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
       <div class="px-4 py-2 space-y-1">
-        <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary/10 hover:text-primary transition-colors">About</a>
-        <a href="#experience" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary/10 hover:text-primary transition-colors">Experience</a>
-        <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary/10 hover:text-primary transition-colors">Projects</a>
-        <a href="#leadership" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary/10 hover:text-primary transition-colors">Leadership</a>
-        <a href="#skills" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary/10 hover:text-primary transition-colors">Skills</a>
-        <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary/10 hover:text-primary transition-colors">Contact</a>
+        <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary/10 hover:text-primary transition-colors duration-200">
+          <span class="en">Home</span><span class="zh hidden">主页</span>
+        </a>
+        <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary/10 hover:text-primary transition-colors duration-200">
+          <span class="en">About</span><span class="zh hidden">关于</span>
+        </a>
+        <a href="#experience" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary/10 hover:text-primary transition-colors duration-200">
+          <span class="en">Experience</span><span class="zh hidden">经历</span>
+        </a>
+        <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary/10 hover:text-primary transition-colors duration-200">
+          <span class="en">Projects</span><span class="zh hidden">项目</span>
+        </a>
+        <a href="#interests" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary/10 hover:text-primary transition-colors duration-200">
+          <span class="en">Interests</span><span class="zh hidden">兴趣</span>
+        </a>
+        <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary/10 hover:text-primary transition-colors duration-200">
+          <span class="en">Contact</span><span class="zh hidden">联系</span>
+        </a>
+
+        <div class="flex space-x-2 mt-3">
+          <button id="lang-en-mobile" class="flex-1 px-2 py-1 rounded-md bg-primary text-white text-sm font-medium">EN</button>
+          <button id="lang-zh-mobile" class="flex-1 px-2 py-1 rounded-md text-dark text-sm font-medium hover:bg-gray-100 transition-colors duration-200">中文</button>
+        </div>
       </div>
     </div>
   </header>
 
+  <!-- Main Content -->
   <main>
-    <!-- Home -->
+
+    <!-- Home Section (same layout placement) -->
     <section id="home" class="pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-primary/5 to-white">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col lg:flex-row items-center gap-12">
-          <!-- Left -->
+
+          <!-- Left side -->
           <div class="lg:w-1/2 space-y-6">
-            <h1 class="text-[clamp(2.25rem,5vw,3.75rem)] font-bold leading-tight text-dark">
-              <span class="text-primary">Jessie Lyu</span>
-              <div class="text-dark text-[clamp(1.1rem,2.1vw,1.35rem)] font-medium mt-2">
-                B.S. Economics & Mathematics @ USC (Expected May 2027)
-              </div>
+            <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold leading-tight text-dark">
+              <span class="en text-primary">Jessie Lyu</span>
+              <div class="en text-dark">B.S. in <strong>Economics & Mathematics</strong> at <strong>USC</strong></div>
+
+              <!-- Placeholder Chinese (kept so the switcher doesn't break) -->
+              <span class="zh hidden text-primary">Jessie Lyu</span>
+              <div class="zh hidden text-dark">（中文）南加州大学 经济学&数学 本科</div>
             </h1>
 
-            <p class="text-[clamp(1rem,2vw,1.15rem)] text-gray-600 leading-relaxed">
-              Private equity & macro research experience across healthcare, indices, and time-series analysis.
-              Interested in investing, quantitative research, and applied analytics.
+            <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-600 leading-relaxed">
+              <span class="en"><strong>Minors:</strong> Business Finance, Applied Analytics </span>
+              <span> <strong>GPA:</strong> 3.96/4.00</span>
+              <span class="zh hidden">（中文）辅修：商科金融、应用分析 | GPA：3.96/4.00</span>
             </p>
 
-            <div class="space-y-2 text-gray-700">
-              <div class="flex items-center gap-3">
-                <i class="fa-solid fa-location-dot text-primary"></i>
-                <span>Los Angeles, CA 90007</span>
-              </div>
-
-              <div class="flex items-center gap-3">
-                <i class="fa-solid fa-phone text-primary"></i>
-                <span>(470) 232-2969</span>
-              </div>
-
-              <div class="flex items-center gap-3">
-                <i class="fa-solid fa-envelope text-primary"></i>
-                <span class="font-medium">jialyu@usc.edu</span>
-                <button class="copy-email-btn ml-1 text-gray-500 hover:text-primary transition-colors"
-                        data-email="jialyu@usc.edu" aria-label="Copy email">
+            <!-- Emails (kept placement & copy buttons) -->
+            <div class="space-y-2">
+              <div class="text-[clamp(1rem,2vw,1.25rem)] text-gray-600 leading-relaxed flex items-center gap-2">
+                <span class="copy-email cursor-pointer hover:text-primary transition-colors">jialyu@usc.edu</span>
+                <button class="copy-email-btn text-gray-500 hover:text-primary transition-colors" data-email="jialyu@usc.edu" aria-label="Copy email">
                   <i class="fa-regular fa-copy"></i>
                 </button>
               </div>
             </div>
 
-            <div class="flex flex-wrap gap-4 pt-2">
-              <!-- Put Jessie's PDF in /pdf/Resume.pdf (or change this link) -->
-              <a href="pdf/Resume.pdf" target="_blank" rel="noopener"
-                 class="px-6 py-3 bg-white text-primary border border-primary rounded-md font-medium hover:bg-primary/5 transition-all">
-                Download Resume
+            <!-- Download CV (keep position; update file name when you upload) -->
+            <div class="flex flex-wrap gap-4 pt-4">
+              <a href="pdf/Jessie_Lyu_Resume.pdf" target="_blank"
+                 class="en px-6 py-3 bg-white text-primary border border-primary rounded-md font-medium hover:bg-primary/5 transition-all duration-200">
+                Download CV
               </a>
-              <a href="#contact"
-                 class="px-6 py-3 bg-primary text-white rounded-md font-medium hover:opacity-95 transition-all">
-                Get in touch
+              <a href="#" target="_blank"
+                 class="zh hidden px-6 py-3 bg-white text-primary border border-primary rounded-md font-medium hover:bg-primary/5 transition-all duration-200">
+                （中文）下载简历
               </a>
             </div>
 
-            <div class="flex items-center space-x-4 pt-2">
-              <!-- Optional: add LinkedIn later -->
-              <a href="mailto:jialyu@usc.edu" class="text-gray-500 hover:text-primary transition-colors" aria-label="Email">
-                <i class="fa-solid fa-paper-plane text-3xl"></i>
+            <!-- Social icons (kept placement; fill links) -->
+            <div class="flex items-center space-x-4 pt-4">
+              <a href="https://www.linkedin.com/in/jessielyu0928/" target="_blank" class="text-gray-500 hover:text-primary transition-colors duration-200" aria-label="LinkedIn">
+                <i class="fa-brands fa-linkedin text-4xl"></i>
               </a>
-              <!-- placeholder icons; safe even if you haven't filled links yet -->
-              <a href="#" class="text-gray-300 cursor-not-allowed" aria-label="LinkedIn (add later)">
-                <i class="fa-brands fa-linkedin text-3xl"></i>
+              <a href="#" target="_blank" class="text-gray-500 hover:text-primary transition-colors duration-200" aria-label="Instagram">
+                <i class="fa-brands fa-instagram text-4xl"></i>
               </a>
             </div>
           </div>
 
-          <!-- Right -->
+          <!-- Right side image block (same placement, Google link photo) -->
           <div class="lg:w-1/2 relative">
             <div class="w-64 h-64 md:w-80 md:h-80 mx-auto relative">
               <div class="absolute inset-0 bg-primary/20 rounded-full blur-3xl"></div>
-              <!-- Replace with your image path, or keep placeholder -->
-              <div class="w-full h-full rounded-2xl shadow-2xl relative z-10 bg-white flex items-center justify-center border">
-                <div class="text-center px-6">
-                  <div class="text-primary font-bold text-xl">Add a photo</div>
-                  <div class="text-gray-500 text-sm mt-1">img/selfie.jpg</div>
+              <img
+                src="img/Jessie_1.jpg"
+                alt="Jessie Lyu Portrait"
+                class="w-full h-full object-cover rounded-2xl shadow-2xl relative z-10"
+              />
+            </div>
+
+            <!-- School cards area (kept placement) -->
+            <div class="mt-6 md:mt-12 z-20 w-full max-w-[24rem] md:max-w-[28rem] ml-auto">
+              <!-- USC -->
+              <div class="flex justify-between text-left max-w-[90%] mb-7">
+                <div class="text-left flex-grow pr-1 min-w-0">
+                  <a href="https://www.usc.edu/" target="_blank">
+                    <h3 class="en text-xl font-bold text-primary">University of Southern California</h3>
+                    <h3 class="zh hidden text-xl font-bold text-primary">（中文）南加州大学</h3>
+                  </a>
+                  <p class="en text-gray-600 mt-1">@ Los Angeles, CA</p>
+                  <p class="zh hidden text-gray-600 mt-1">@ （中文）洛杉矶</p>
+                </div>
+                <div class="flex-shrink-0">
+                  <div class="relative w-20 h-20 rounded-lg overflow-hidden shadow-md border-2 border-white">
+                    <img src="img/trojan.jpg" alt="Trojan" class="absolute inset-0 w-full h-full object-cover">
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="mt-8 md:mt-12 z-20 w-full max-w-[28rem] ml-auto">
-              <div class="bg-white rounded-2xl shadow-sm border p-6">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                  </div>
-                  <div>
-                    <div class="font-bold text-dark">University of Southern California</div>
-                    <div class="text-gray-600 text-sm">Economics & Mathematics • Minors: Business Finance, Applied Analytics</div>
-                  </div>
-                </div>
-
-                <div class="mt-4 grid grid-cols-2 gap-3">
-                  <div class="bg-gray-50 rounded-xl p-3">
-                    <div class="text-xs text-gray-500">GPA</div>
-                    <div class="font-semibold">3.96 / 4.00</div>
-                  </div>
-                  <div class="bg-gray-50 rounded-xl p-3">
-                    <div class="text-xs text-gray-500">Honors</div>
-                    <div class="font-semibold">Dean’s List Scholar</div>
-                  </div>
-                </div>
-
-                <div class="mt-4 text-sm text-gray-600">
-                  Co-Inventor, Patent: ZL202110682111.5 — “Redirection of HMD under Seated Conditions”
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- About -->
+    <!-- About Section (same layout placement, content updated) -->
     <section id="about" class="py-16 md:py-24 bg-white">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-14">
-          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">About</h2>
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">
+            <span class="en">About Me</span>
+            <span class="zh hidden">关于我</span>
+          </h2>
           <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-12 items-start">
-          <div class="bg-gray-50 rounded-2xl p-8 border">
-            <h3 class="font-bold text-lg mb-3">Focus</h3>
-            <ul class="list-disc pl-5 text-gray-700 space-y-2">
-              <li>Private equity research and deal support in healthcare and biotech.</li>
-              <li>Macro strategy analysis with time-series datasets (U.S. labor, China real estate).</li>
-              <li>Index/portfolio analytics and clear communication to stakeholders.</li>
-            </ul>
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <!-- About image (Google link photo) -->
+          <div class="relative">
+            <img
+              src="img/Jessie_2.jpg"
+              alt="Jessie Lyu"
+              class="w-full h-full rounded-2xl shadow-xl"
+            />
           </div>
 
           <div class="space-y-6">
-            <p class="text-gray-600 leading-relaxed">
-              I’m an Economics & Mathematics student at USC (Expected May 2027) with hands-on experience in private equity,
-              macro strategy research, and financial analysis across global markets.
-            </p>
-            <p class="text-gray-600 leading-relaxed">
-              I enjoy building practical models (Excel/Python/SQL), translating data into decisions, and writing investment-ready
-              memos and reports.
-            </p>
+            <div class="text-gray-600 leading-relaxed space-y-4">
+              <p class="en">
+                I’m an Economics & Mathematics student at the University of Southern California (GPA: <strong>3.96/4.00</strong>),
+                with minors in <strong>Business Finance</strong> and <strong>Applied Analytics</strong>.
+                My interests sit at the intersection of <strong>investing</strong>, <strong>macro strategy</strong>,
+                and <strong>data-driven decision making</strong>.
+              </p>
+              <p class="en">
+                I’ve worked across private equity and macro research, including a Private Equity Analyst internship at
+                <strong>Forebright Capital</strong>, where I researched market entry opportunities and supported healthcare investments.
+                I also conducted quantitative analysis in financial strategy and macro research roles, using <strong>Excel</strong>, <strong>Python</strong>, and structured datasets to produce decision-ready insights.
+              </p>
+              <p class="en">
+                On campus, I co-lead international math competitions and mentor programs at scale, and I tutor student-athletes
+                in financial modeling (DCF, WACC) and core economic concepts.
+              </p>
 
-            <div class="grid grid-cols-2 gap-4">
-              <div class="bg-white p-4 rounded-xl border hover:shadow-sm transition-shadow">
-                <div class="flex items-center gap-3">
+              <p class="zh hidden">
+                （中文占位）这里可以放 Jessie 的中文简介；如果暂时没有，就保持占位即可。
+              </p>
+            </div>
+
+            <!-- Languages & Tools block (same placement; updated items) -->
+            <div>
+              <h3 class="text-xl font-bold text-dark mb-6 flex items-center">
+                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary mr-3">
+                  <i class="fa-solid fa-wrench"></i>
+                </div>
+                <span class="en">Languages & Tools</span>
+                <span class="zh hidden">语言与工具</span>
+              </h3>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div class="bg-gray-50 p-4 rounded-xl flex items-center space-x-3 hover:shadow-md transition-shadow duration-300">
                   <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                    <i class="fa-solid fa-calculator"></i>
+                    <i class="fa-solid fa-code"></i>
                   </div>
                   <div>
-                    <div class="font-medium">Core Coursework</div>
-                    <div class="text-sm text-gray-500">Calc III, Linear Algebra, Micro/Macro</div>
+                    <h4 class="font-medium text-dark"><span class="en">Python</span><span class="zh hidden">Python</span></h4>
+                    <p class="text-sm text-gray-500">Data cleaning, regression, visualization</p>
                   </div>
                 </div>
-              </div>
 
-              <div class="bg-white p-4 rounded-xl border hover:shadow-sm transition-shadow">
-                <div class="flex items-center gap-3">
+                <div class="bg-gray-50 p-4 rounded-xl flex items-center space-x-3 hover:shadow-md transition-shadow duration-300">
+                  <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                    <i class="fa-solid fa-table"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-dark"><span class="en">Excel</span><span class="zh hidden">Excel</span></h4>
+                    <p class="text-sm text-gray-500">Models, pivots, dashboards</p>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-xl flex items-center space-x-3 hover:shadow-md transition-shadow duration-300">
                   <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
                     <i class="fa-solid fa-chart-line"></i>
                   </div>
                   <div>
-                    <div class="font-medium">Applied Analytics</div>
-                    <div class="text-sm text-gray-500">Regression, panels, visualization</div>
+                    <!-- <h4 class="font-medium text-dark"><span class="en">Bloomberg</span><span class="zh hidden">Bloomberg</span></h4> -->
+                    <p class="text-sm text-gray-500">Market data, research</p>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-xl flex items-center space-x-3 hover:shadow-md transition-shadow duration-300">
+                  <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                    <i class="fa-solid fa-database"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-dark"><span class="en">SQL</span><span class="zh hidden">SQL</span></h4>
+                    <p class="text-sm text-gray-500">Querying & structuring data</p>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Experience -->
+    <!-- Experience & Education Section (same layout, updated resume content) -->
     <section id="experience" class="py-16 md:py-24 bg-gray-50">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-14">
-          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">Experience</h2>
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">
+            <span class="en">Experience & Education</span>
+            <span class="zh hidden">经历与教育</span>
+          </h2>
           <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
         </div>
 
-        <div class="grid lg:grid-cols-2 gap-8">
-          <!-- Forebright -->
-          <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow border-l-4 border-primary">
-            <div class="flex justify-between items-start gap-3">
-              <div>
-                <h3 class="font-bold text-lg">Private Equity Analyst Intern</h3>
-                <p class="text-primary font-medium">Forebright Capital • Hong Kong, China</p>
+        <div class="grid md:grid-cols-2 gap-12">
+
+          <!-- Work Experience -->
+          <div>
+            <h3 class="text-xl font-bold text-dark mb-6 flex items-center">
+              <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary mr-3">
+                <i class="fa-solid fa-briefcase"></i>
               </div>
-              <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">
-                Jun 2025 – Aug 2025
-              </span>
+              <span class="en">Work Experience</span>
+              <span class="zh hidden">工作经历</span>
+            </h3>
+
+            <div class="space-y-8">
+
+              <!-- Forebright -->
+              <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-l-4 border-primary">
+                <div class="flex justify-between items-start mb-4 gap-4">
+                  <div>
+                    <h4 class="font-bold text-dark text-lg"><span class="en">Private Equity Analyst Intern</span><span class="zh hidden">（中文占位）私募实习</span></h4>
+                    <p class="en text-primary font-medium">Forebright Capital, Hong Kong</p>
+                    <p class="zh hidden text-primary font-medium">（中文）Forebright Capital，香港</p>
+                  </div>
+                  <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">
+                    <span class="en">Jun 2025 – Aug 2025</span><span class="zh hidden">（中文占位）2025年6月-8月</span>
+                  </span>
+                </div>
+                <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                  <li class="en">Researched Central Asian ophthalmology market; modeled penetration ratios in Excel and presented a 30+ page strategic report for market entry planning.</li>
+                  <li class="en">Led due diligence on 5 European biotech firms; authored investment memos that informed investment committee decisions.</li>
+                  <li class="en">Supported execution of 3 healthcare investments in Mexico totaling $40M; helped draft and negotiate shareholder agreements and key deal terms.</li>
+                </ul>
+              </div>
+
+              <!-- Pacific Bridge -->
+              <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-l-4 border-primary">
+                <div class="flex justify-between items-start mb-4 gap-4">
+                  <div>
+                    <h4 class="font-bold text-dark text-lg"><span class="en">Financial Strategy & Research Intern</span><span class="zh hidden">（中文占位）金融战略实习</span></h4>
+                    <p class="en text-primary font-medium">The Pacific Bridge Companies, Monrovia, CA</p>
+                    <p class="zh hidden text-primary font-medium">（中文占位）Pacific Bridge，美国加州</p>
+                  </div>
+                  <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">
+                    <span class="en">Jan 2025 – Apr 2025</span><span class="zh hidden">（中文占位）2025年1月-4月</span>
+                  </span>
+                </div>
+                <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                  <li class="en">Conducted quantitative analysis on Volatility Control Indices in IUL products; used Excel, and Python for data processing and visualization.</li>
+                  <li class="en">Led the firm’s first Financial Literacy Program for high-net-worth families; designed curriculum from 50+ sources and built an external partnership.</li>
+                </ul>
+              </div>
+
+              <!-- Minsheng Securities -->
+              <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-l-4 border-primary">
+                <div class="flex justify-between items-start mb-4 gap-4">
+                  <div>
+                    <h4 class="font-bold text-dark text-lg"><span class="en">Macro Strategy Analyst Intern</span><span class="zh hidden">（中文占位）宏观策略实习</span></h4>
+                    <p class="en text-primary font-medium">Minsheng Securities, Shanghai</p>
+                    <p class="zh hidden text-primary font-medium">（中文占位）民生证券，上海</p>
+                  </div>
+                  <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">
+                    <span class="en">Jul 2024 – Sep 2024</span><span class="zh hidden">（中文占位）2024年7月-9月</span>
+                  </span>
+                </div>
+                <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                  <li class="en">Analyzed U.S. labor market using FRED and iFinD; cleaned/structured datasets and built forecasts and visualizations.</li>
+                  <li class="en">Analyzed China real estate time series using iFinD and Excel; contributed to a 30-page research report.</li>
+                  <li class="en">Supported 2024 A-Share Mid-Year Strategy Report; built dataset of 100+ variables from 50+ reports.</li>
+                </ul>
+              </div>
+
             </div>
-            <ul class="list-disc pl-5 text-gray-600 space-y-2 mt-4">
-              <li>Researched Central Asian ophthalmology market; built penetration models in Excel and presented a 30+ page report.</li>
-              <li>Led diligence on 5 European biotech firms; authored investment memos for committee decisions.</li>
-              <li>Supported execution of 3 healthcare investments in Mexico totaling $40M; coordinated on agreements and key terms.</li>
-            </ul>
           </div>
 
-          <!-- Pacific Bridge -->
-          <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow border-l-4 border-primary">
-            <div class="flex justify-between items-start gap-3">
-              <div>
-                <h3 class="font-bold text-lg">Financial Strategy & Research Intern</h3>
-                <p class="text-primary font-medium">The Pacific Bridge Companies • Monrovia, CA</p>
+          <!-- Education -->
+          <div>
+            <h3 class="text-xl font-bold text-dark mb-6 flex items-center">
+              <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary mr-3">
+                <i class="fa-solid fa-graduation-cap"></i>
               </div>
-              <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">
-                Jan 2025 – Apr 2025
-              </span>
+              <span class="en">Education</span>
+              <span class="zh hidden">教育背景</span>
+            </h3>
+
+            <div class="space-y-8">
+              <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-l-4 border-secondary">
+                <div class="flex justify-between items-start mb-4 gap-4">
+                  <div>
+                    <h4 class="font-bold text-dark text-lg"><span class="en">B.S. in Economics & Mathematics</span><span class="zh hidden">（中文占位）经济学&数学学士</span></h4>
+                    <p class="en text-secondary font-medium">University of Southern California</p>
+                    <p class="zh hidden text-secondary font-medium">（中文）南加州大学</p>
+                  </div>
+                  <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">
+                    <span class="en">Expected May 2027</span><span class="zh hidden">（中文）预计2027</span>
+                  </span>
+                </div>
+
+                <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                  <li class="en">GPA: <strong>3.96 / 4.00</strong></li> 
+                  <li class="en">Minors: Business Finance, Applied Analytics</li>
+                  <li class="en">Honors: Dean’s List Scholar; Sylas and Rose Meyer Scholarship; Co-Inventor (Patent ZL202110682111.5)</li>
+                  <li class="en">Core Coursework: Calculus III, Linear Algebra, Economic Consulting, Macroeconomics, Microeconomics</li>
+                </ul>
+              </div>
+
+              <!-- Placeholder education card to keep your layout density -->
+              <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-l-4 border-secondary">
+                <div class="flex justify-between items-start mb-4 gap-4">
+                  <div>
+                    <h4 class="font-bold text-dark text-lg"><span class="en">Additional Education / Certification</span><span class="zh hidden">（中文占位）其他</span></h4>
+                    <p class="en text-secondary font-medium">Placeholder</p>
+                    <p class="zh hidden text-secondary font-medium">（中文占位）</p>
+                  </div>
+                  <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">
+                    <span class="en">—</span><span class="zh hidden">—</span>
+                  </span>
+                </div>
+                <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                  <li class="en">Use this card if you later add certifications, awards, or a second institution.</li>
+                </ul>
+              </div>
+
             </div>
-            <ul class="list-disc pl-5 text-gray-600 space-y-2 mt-4">
-              <li>Analyzed Volatility Control Indices in IUL products using Excel, Bloomberg, and Python.</li>
-              <li>Built data processing and visualization workflows; presented findings to senior leadership.</li>
-              <li>Launched a financial literacy program for HNW families; designed curriculum from 50+ sources and built partnerships.</li>
-            </ul>
           </div>
 
-          <!-- Minsheng -->
-          <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow border-l-4 border-primary">
-            <div class="flex justify-between items-start gap-3">
-              <div>
-                <h3 class="font-bold text-lg">Macro Strategy Analyst Intern</h3>
-                <p class="text-primary font-medium">Minsheng Securities • Shanghai, China</p>
-              </div>
-              <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">
-                Jul 2024 – Sep 2024
-              </span>
-            </div>
-            <ul class="list-disc pl-5 text-gray-600 space-y-2 mt-4">
-              <li>Analyzed U.S. labor market using FRED and iFinD; cleaned datasets in Excel for forecasts and visuals.</li>
-              <li>Studied China real estate time series with iFinD/Excel; contributed to a 30-page research report.</li>
-              <li>Supported A-Share mid-year strategy report; built 100+ variable dataset from 50+ reports.</li>
-            </ul>
-          </div>
-
-          <!-- Education Card -->
-          <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow border-l-4 border-secondary">
-            <div class="flex justify-between items-start gap-3">
-              <div>
-                <h3 class="font-bold text-lg">University of Southern California</h3>
-                <p class="text-secondary font-medium">B.S. Economics & Mathematics • Expected May 2027</p>
-              </div>
-              <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">
-                Los Angeles, CA
-              </span>
-            </div>
-            <ul class="list-disc pl-5 text-gray-600 space-y-2 mt-4">
-              <li>Minors: Business Finance, Applied Analytics</li>
-              <li>GPA: 3.96 / 4.00 • Dean’s List Scholar • Sylas and Rose Meyer Scholarship</li>
-              <li>Coursework: Calculus III, Linear Algebra, Economic Consulting, Micro/Macro</li>
-            </ul>
-          </div>
         </div>
       </div>
     </section>
 
-    <!-- Projects -->
+    <!-- Projects Section (same grid placement; updated to Jessie content) -->
     <section id="projects" class="py-16 md:py-24 bg-white">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-14">
-          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">Projects</h2>
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">
+            <span class="en">Projects & Research</span>
+            <span class="zh hidden">项目与研究</span>
+          </h2>
           <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-8">
-          <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+          <!-- Project 1 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform group relative hover:scale-105 hover:z-10">
+            <img src="https://drive.google.com/uc?export=view&id=YOUR_PROJECT1_IMAGE_ID" alt="Economic Research" class="w-full h-48 object-cover">
             <div class="p-6">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                  <i class="fa-solid fa-house"></i>
-                </div>
-                <h3 class="font-bold text-lg">Housing Prices: University Factors Study</h3>
-              </div>
-              <p class="text-gray-600 mt-3">
-                Built a multivariate time-series regression and hedonic pricing model with fixed effects and robust OLS.
-                Integrated 10+ datasets into a 36-month panel and explained ~82% of price variation.
-              </p>
-              <div class="flex flex-wrap gap-2 mt-4">
+              <h3 class="font-bold text-lg text-dark mb-2">University Housing Price Model</h3>
+              <p class="text-gray-600 mb-4">Multivariate time-series regression and hedonic pricing model (R² ~ 82%).</p>
+              <div class="flex items-center space-x-2">
                 <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">Python</span>
-                <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">Time Series</span>
                 <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">Econometrics</span>
               </div>
             </div>
+            <div class="absolute inset-0 bg-white p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-auto">
+              <h3 class="font-bold text-lg text-dark mb-2">Economic Research Analyst (USC Econ Dept)</h3>
+              <ul class="list-disc pl-5 text-gray-600 space-y-1">
+                <li>Built a multivariate time-series regression integrating 10+ datasets into a 36-month panel; cleaned and analyzed data using Python.</li>
+                <li>Estimated a hedonic pricing model with time fixed effects and heteroskedasticity-robust OLS, explaining ~82% of price variation.</li>
+                <li>Delivered a 30-page report with stakeholder-specific recommendations.</li>
+              </ul>
+            </div>
           </div>
 
-          <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border">
+          <!-- Project 2 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform group relative hover:scale-105 hover:z-10">
+            <img src="https://drive.google.com/uc?export=view&id=YOUR_PROJECT2_IMAGE_ID" alt="Volatility Control" class="w-full h-48 object-cover">
             <div class="p-6">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                  <i class="fa-solid fa-lightbulb"></i>
+              <h3 class="font-bold text-lg text-dark mb-2">Volatility Control Indices Analysis</h3>
+              <p class="text-gray-600 mb-4">Quant study on VC indices in IUL products using Excel/Python.</p>
+              <div class="flex items-center space-x-2">
+                <!-- <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">Bloomberg</span> -->
+                <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">Excel</span>
+              </div>
+            </div>
+            <div class="absolute inset-0 bg-white p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-auto">
+              <h3 class="font-bold text-lg text-dark mb-2">Financial Strategy & Research</h3>
+              <ul class="list-disc pl-5 text-gray-600 space-y-1">
+                <li>Processed and visualized index data; summarized findings in an internal report to senior leadership.</li>
+                <li>Built repeatable Excel workflows for analysis and presentation.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Project 3 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform group relative hover:scale-105 hover:z-10">
+            <img src="https://drive.google.com/uc?export=view&id=YOUR_PROJECT3_IMAGE_ID" alt="PE Due Diligence" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <h3 class="font-bold text-lg text-dark mb-2">Private Equity Diligence & Memos</h3>
+              <p class="text-gray-600 mb-4">Biotech diligence + healthcare investment support across regions.</p>
+              <div class="flex items-center space-x-2">
+                <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">Private Equity</span>
+                <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">Healthcare</span>
+              </div>
+            </div>
+            <div class="absolute inset-0 bg-white p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-auto">
+              <h3 class="font-bold text-lg text-dark mb-2">Forebright Capital Workstreams</h3>
+              <ul class="list-disc pl-5 text-gray-600 space-y-1">
+                <li>Market research + penetration modeling for Central Asia ophthalmology entry planning.</li>
+                <li>5 European biotech diligence cases; authored IC memos.</li>
+                <li>Supported $40M healthcare investments in Mexico; helped negotiate key deal terms.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Interests Section (same placement; updated to Jessie) -->
+    <section id="interests" class="py-16 md:py-24 bg-gray-50">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">
+            <span class="en">Interests & Activities</span>
+            <span class="zh hidden">兴趣与活动</span>
+          </h2>
+          <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+
+          <div class="bg-gray-50 rounded-xl p-6 text-center hover:bg-primary/5 transition-colors duration-300">
+            <div class="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
+              <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+            </div>
+            <h4 class="font-bold text-dark">Tennis</h4>
+            <p class="text-sm text-gray-500">Interests</p>
+          </div>
+
+          <div class="bg-gray-50 rounded-xl p-6 text-center hover:bg-primary/5 transition-colors duration-300">
+            <div class="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
+              <i class="fa-solid fa-music"></i>
+            </div>
+            <h4 class="font-bold text-dark">Choir</h4>
+            <p class="text-sm text-gray-500">10-year singer</p>
+          </div>
+
+          <div class="bg-gray-50 rounded-xl p-6 text-center hover:bg-primary/5 transition-colors duration-300">
+            <div class="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
+              <i class="fa-solid fa-piano-keyboard"></i>
+            </div>
+            <h4 class="font-bold text-dark">Piano</h4>
+            <p class="text-sm text-gray-500">Four-hand duets (Lvl 10)</p>
+          </div>
+
+          <!-- Placeholder cards to keep your grid density -->
+          <div class="bg-gray-50 rounded-xl p-6 text-center hover:bg-primary/5 transition-colors duration-300">
+            <div class="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <h4 class="font-bold text-dark">Leadership</h4>
+            <p class="text-sm text-gray-500">SC Math Competition</p>
+          </div>
+
+          <div class="bg-gray-50 rounded-xl p-6 text-center hover:bg-primary/5 transition-colors duration-300">
+            <div class="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
+              <i class="fa-solid fa-chalkboard-user"></i>
+            </div>
+            <h4 class="font-bold text-dark">Tutoring</h4>
+            <p class="text-sm text-gray-500">DCF & Econ</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section (same placement; updated contact info) -->
+    <section id="contact" class="py-16 md:py-24 bg-white">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">
+            <span class="en">Contact</span>
+            <span class="zh hidden">联系</span>
+          </h2>
+          <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-12 items-start">
+
+          <!-- Left card -->
+          <div class="bg-gray-50 rounded-2xl p-8 shadow-sm">
+            <h3 class="text-xl font-bold text-dark mb-6">Get in touch</h3>
+
+            <!-- Email -->
+            <div class="flex items-start space-x-4 mb-6">
+              <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary flex-shrink-0">
+                <i class="fa-solid fa-envelope"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-dark mb-1">Email</h4>
+                <div class="font-medium text-gray-600 leading-relaxed flex items-center">
+                  <span class="copy-email cursor-pointer text-primary hover:text-primary/80 transition-colors duration-200">jialyu@usc.edu</span>
+                  <button class="copy-email-btn ml-2 text-gray-500 hover:text-primary transition-colors" data-email="jialyu@usc.edu" aria-label="Copy email">
+                    <i class="fa-regular fa-copy text-[0.875rem]"></i>
+                  </button>
                 </div>
-                <h3 class="font-bold text-lg">Patent: HMD Redirection Under Seated Conditions</h3>
-              </div>
-              <p class="text-gray-600 mt-3">
-                Co-inventor on Patent ZL202110682111.5 (State Intellectual Property Office of the P.R.C).
-              </p>
-              <div class="flex flex-wrap gap-2 mt-4">
-                <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">Innovation</span>
-                <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">Collaboration</span>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- Leadership -->
-    <section id="leadership" class="py-16 md:py-24 bg-gray-50">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-14">
-          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">Leadership</h2>
-          <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-8">
-          <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow border-l-4 border-primary">
-            <div class="flex justify-between items-start gap-3">
+            <!-- Phone -->
+            <div class="flex items-start space-x-4 mb-6">
+              <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary flex-shrink-0">
+                <i class="fa-solid fa-phone"></i>
+              </div>
               <div>
-                <h3 class="font-bold text-lg">Co-President</h3>
-                <p class="text-primary font-medium">SC Mathematics Competition • Los Angeles, CA</p>
+                <h4 class="font-medium text-dark mb-1">Phone</h4>
+                <a href="tel:+14702322969" class="text-gray-600 hover:text-primary transition-colors duration-200">(470) 232-2969</a>
               </div>
-              <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">
-                Sep 2023 – Present
-              </span>
             </div>
-            <ul class="list-disc pl-5 text-gray-600 space-y-2 mt-4">
-              <li>Led bi-annual competitions and mentorship programs for 1000+ students across 5 countries.</li>
-              <li>Built Excel systems (10+ parameters, pivot tables) to optimize pairings, operations, and fundraising.</li>
-            </ul>
-          </div>
 
-          <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow border-l-4 border-primary">
-            <div class="flex justify-between items-start gap-3">
+            <!-- Location -->
+            <div class="flex items-start space-x-4">
+              <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary flex-shrink-0">
+                <i class="fa-solid fa-location-dot"></i>
+              </div>
               <div>
-                <h3 class="font-bold text-lg">Student-Athlete Academic Tutor</h3>
-                <p class="text-primary font-medium">USC Athletics Department • Los Angeles, CA</p>
+                <h4 class="font-medium text-dark mb-1">Location</h4>
+                <p class="text-gray-600">Los Angeles, CA 90007</p>
               </div>
-              <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">
-                May 2025 – Present
-              </span>
-            </div>
-            <ul class="list-disc pl-5 text-gray-600 space-y-2 mt-4">
-              <li>Delivered DCF modeling training in Excel, including WACC derivation and financial statements analysis.</li>
-              <li>Lectured on market structures, elasticity, and monetary policy transmission.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Skills -->
-    <section id="skills" class="py-16 md:py-24 bg-white">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-14">
-          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">Skills & Interests</h2>
-          <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-8">
-          <div class="bg-gray-50 p-6 rounded-2xl border">
-            <h3 class="font-bold text-lg mb-4">Skills</h3>
-            <div class="flex flex-wrap gap-2">
-              <span class="text-sm bg-white border px-3 py-1 rounded-full">Excel</span>
-              <span class="text-sm bg-white border px-3 py-1 rounded-full">PowerPoint</span>
-              <span class="text-sm bg-white border px-3 py-1 rounded-full">Word</span>
-              <span class="text-sm bg-white border px-3 py-1 rounded-full">Python</span>
-              <span class="text-sm bg-white border px-3 py-1 rounded-full">SQL</span>
-              <span class="text-sm bg-white border px-3 py-1 rounded-full">Bloomberg</span>
             </div>
           </div>
 
-          <div class="bg-gray-50 p-6 rounded-2xl border">
-            <h3 class="font-bold text-lg mb-4">Interests</h3>
-            <ul class="list-disc pl-5 text-gray-700 space-y-2">
-              <li>Tennis</li>
-              <li>10-year choir singer</li>
-              <li>Piano (four-hand duets with twin sister, Level 10)</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
+          <!-- Right card (placeholder for a form / map / extra content) -->
+          <div class="bg-gray-50 rounded-2xl p-8 shadow-sm">
+            <h3 class="text-xl font-bold text-dark mb-6">Links</h3>
+            <p class="text-gray-600 mb-6">
+              Add your LinkedIn / GitHub / portfolio links here (kept this card to preserve layout).
+            </p>
 
-    <!-- Contact -->
-    <section id="contact" class="py-16 md:py-24 bg-gray-50">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-14">
-          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">Contact</h2>
-          <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
-        </div>
-
-        <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-sm border p-8">
-          <div class="space-y-4">
-            <div class="flex items-center justify-between gap-4">
-              <div class="flex items-center gap-3">
-                <i class="fa-solid fa-envelope text-primary"></i>
-                <span class="font-medium">jialyu@usc.edu</span>
-              </div>
-              <button class="copy-email-btn text-gray-500 hover:text-primary transition-colors"
-                      data-email="jialyu@usc.edu" aria-label="Copy email">
-                <i class="fa-regular fa-copy"></i>
-              </button>
-            </div>
-
-            <div class="flex items-center gap-3 text-gray-700">
-              <i class="fa-solid fa-phone text-primary"></i>
-              <span>(470) 232-2969</span>
-            </div>
-
-            <div class="pt-4">
-              <a href="mailto:jialyu@usc.edu"
-                 class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-md font-medium hover:opacity-95 transition-all">
-                <i class="fa-solid fa-paper-plane"></i>
-                Email Jessie
+            <div class="flex items-center space-x-4">
+              <a href="https://www.linkedin.com/in/jessielyu0928/" target="_blank" class="text-gray-500 hover:text-primary transition-colors duration-200" aria-label="LinkedIn">
+                <i class="fa-brands fa-linkedin text-3xl"></i>
+              </a>
+              <a href="#" target="_blank" class="text-gray-500 hover:text-primary transition-colors duration-200" aria-label="GitHub">
+                <i class="fa-brands fa-github text-3xl"></i>
+              </a>
+              <a href="#" target="_blank" class="text-gray-500 hover:text-primary transition-colors duration-200" aria-label="Website">
+                <i class="fa-solid fa-globe text-3xl"></i>
               </a>
             </div>
+
           </div>
+
         </div>
-
-        <footer class="text-center text-gray-500 text-sm mt-10">
-          © <span id="year"></span> Jessie Lyu. Built with GitHub Pages.
-        </footer>
-
-        <script>
-          document.getElementById("year").textContent = new Date().getFullYear();
-        </script>
       </div>
     </section>
+
   </main>
+
+  <footer class="py-10 bg-white border-t border-gray-100">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500">
+      <p>© <span id="year"></span> Jessie Lyu. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
 </body>
 </html>
